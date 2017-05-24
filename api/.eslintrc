@@ -1,0 +1,33 @@
+{
+    "rules": {
+        "no-console": 0,
+        "no-dupe-keys": "error",
+        "no-unused-vars": 0,
+        "indent": ["error", "tab"],
+        "semi": ["warn", "always"],
+        "quotes": [0, "single"],
+        "comma-dangle": ["warn", "always-multiline"],
+        "key-spacing": ["warn", { "beforeColon" : true, "afterColon" : true } ],
+        "object-curly-spacing" : ["error", "always"],
+        "space-before-function-paren" : "error",
+        "space-before-blocks" : "error",
+        "arrow-spacing" : "error"
+    },
+    "globals": {
+        "global" : true,
+    },
+    "env": {
+        "es6": true,
+        "node": true,
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module",
+        "blockBindings": true,
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+        },
+    },
+    "plugins": [],
+}
