@@ -107,7 +107,7 @@ app.set('trust proxy', true);
 app.use(morgan('combined'));
 app.use(cookieSession({
 	name : 'session',
-	keys : ['TEST', '0123456789', '1'],
+	keys : ['TEST0123456789'],
 	maxAge : 24 * 60 * 60 * 1000 * 365,
 }));
 app.use('/graphql', graphqlHTTP({
