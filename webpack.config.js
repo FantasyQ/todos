@@ -34,7 +34,7 @@ module.exports = {
 	entry : {
 		'app' : [
 			'babel-polyfill',
-			'./web/index.jsx',
+			'./web/app.jsx',
 		],
 	},
 	output : {
@@ -59,7 +59,6 @@ module.exports = {
 			{
 				test : /\.css$/,
 				loader : 'style-loader!css-loader!postcss-loader',
-				// loaders : ["style-loader", "css-loader", "postcss-loader"],
 			},
 		],
 		noParse : /node_modules\/quill\/dist/
