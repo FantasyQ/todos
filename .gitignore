@@ -32,22 +32,7 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
-########
-
-frontend/dist/public/app.js
-frontend/dist/public/app.*.js
-frontend/dist/public/admin.js
-frontend/dist/public/admin.*.js
-*.js.map
-
-web/dist/public/app.js
-web/dist/public/app.*.js
-web/dist/public/admin.js
-web/dist/public/admin.*.js
-web/dist/public/admin.redux.js
-web/dist/public/test.js
-web/dist/public-v3/app.js
-web/dist/public-v3/admin.js
+web/dist/app.js
 *.js.map
 
 *.json.gzip
@@ -58,5 +43,3 @@ sessions.db-journal
 
 *.patch
 *.diff
-
-emails.csv

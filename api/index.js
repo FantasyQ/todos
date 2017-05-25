@@ -127,7 +127,7 @@ function md5 (str) {
 }
 
 app.get('*', (req, res, next) => {
-	require('fs').readFile(__dirname + '/../web/dist/app.ejs', (err, result) => {
+	require('fs').readFile(__dirname + '/../web/app.ejs', (err, result) => {
 		if(err) return next(err);
 		result = result.toString();
 		result = require('ejs').render(result, {
