@@ -9,13 +9,17 @@ import { connect } from 'react-redux';
 class Main extends Component {
 
 	render () {
-		const { todos, filter } = this.props;
+		const { todos, filter, new_todo_value } = this.props;
 		const allChecked = todos && todos.every(t => t.status == 'CMPL');
 		return (
 			<div className='Main'>
 				<h1>todos</h1>
 				<div className='Form'>
-					<input className="NewTODO" placeholder="What needs to be done?" value="" />
+					<input className="NewTODO" placeholder="What needs to be done?"
+						value={new_todo_value}
+						onKeyPress={this.onKeyPress.bind(this)}
+						onChange={e => this.onChange('new_todo_value', e.target.value, e)}
+					/>
 				</div>
 				<If test={todos instanceof Array && todos.length > 0}>
 					<div className='TODOs'>
@@ -37,7 +41,7 @@ class Main extends Component {
 				<If test={todos instanceof Array && todos.length > 0}>
 					<div className='Footer'>
 						<span className='TODOCount'>
-							{todos.length} items left
+							{todos ? todos.length : 0} items left
 						</span>
 						<ul className="Filters">
 							<li className={cx({active : !filter})} onClick={this.onChange.bind(this, 'filter', null)}>
@@ -56,7 +60,21 @@ class Main extends Component {
 		);
 	}
 
-	onChange (name, value) {
+	onKeyPress (e) {
+		if (e.key === 'Enter') {
+			this.props.dispatch({
+				type : 'SET_DATA',
+				todos : [].concat(this.props.todos || []).concat({
+					id : Date.now(),
+					message : this.props.new_todo_value,
+					status : 'ACTIVE',
+				}),
+				new_todo_value : '',
+			});
+		}
+	}
+
+	onChange (name, value, e) {
 		const action = { type : 'SET_DATA' };
 		action[name] = value;
 		this.props.dispatch(action);
@@ -132,6 +150,7 @@ export default connect(state => {
 				status : 'CMPL',
 			}
 		],
+		new_todo_value : '',
 		...state.data,
 	};
 })(Main)
