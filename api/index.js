@@ -19,6 +19,21 @@ app.use(cookieSession({
 	maxAge : 24 * 60 * 60 * 1000 * 365,
 }));
 
+// 靜態資源
+app.use('/public', express.static(__dirname + '/../web/dist', {
+	// maxAge : '1d',
+	maxAge : process.env.NODE_ENV == 'production' ? 1000 * 60 * 60 * 2 : 0,
+	etag : true,
+	lastModified : false,
+	index : false,
+	setHeaders : function (res, path, stat) {
+		if(/vfs_fonts\.js$/.test(path)) {
+			console.log(path);
+			res.setHeader('Cache-Control', 'public, max-age=2592000');
+		}
+	},
+}));
+
 /////////////////////////////////////////////////////////
 
 const EnumTODOStatus = new GraphQLEnumType({

@@ -1,10 +1,9 @@
 
 import reducer from './reducers/index.js';
 import { createStore, applyMiddleware } from 'redux';
-import { logger, crashReporter, vanillaPromise, graphqlLayer, ajaxLayer } from './middlewares/index.js';
+import { logger, crashReporter, vanillaPromise, graphqlLayer } from './middlewares/index.js';
 
 const store = createStore(reducer, applyMiddleware(
-	ajaxLayer,
 	graphqlLayer,
 	vanillaPromise,
 	logger,

@@ -43,7 +43,9 @@ module.exports = {
 	},
 	resolve : {
 		extensions : ['', '.js', '.jsx'],
-		// alias: { },
+		alias : {
+			components : path.join(__dirname, 'web/components'),
+		},
 	},
 	module : {
 		loaders : [
