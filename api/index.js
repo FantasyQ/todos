@@ -130,6 +130,11 @@ const schema = new GraphQLSchema({
 	}),
 });
 
+app.use('/graphql', graphqlHTTP({
+	schema : schema,
+	graphiql : true,
+}));
+
 //////////////////////////////////////////////////////////
 
 let JS_VERSION = moment().format('YYYYMMDDHH');
@@ -158,8 +163,4 @@ app.get('*', (req, res, next) => {
 
 //////////////////////////////////////////////////////////
 
-app.use('/graphql', graphqlHTTP({
-	schema : schema,
-	graphiql : true,
-}));
 app.listen(4000, () => console.log('Now browse to localhost:4000/graphql'));

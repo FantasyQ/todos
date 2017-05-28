@@ -8,6 +8,16 @@ import { connect } from 'react-redux';
 
 class Main extends Component {
 
+	componentWillMount () {
+		this.props.dispatch({
+			type : 'CLEAR_DATA',
+		});
+	}
+
+	componentDidMount () {
+		this._fetch();
+	}
+
 	render () {
 		const { todos, filter, new_todo_value } = this.props;
 		const allChecked = todos && todos.every(t => t.status == 'CMPL');
@@ -26,7 +36,7 @@ class Main extends Component {
 						<input className="ToggleAll" type="checkbox" checked={allChecked}
 							onChange={this.toggleAll.bind(this, allChecked ? 'ACTIVE' : 'CMPL')} />
 						<ul className="TODOList" >
-							{(todos || []).map((todo,index) => {
+							{todos.map((todo,index) => {
 								return (
 									<TODOItem key={`${todo.id}-${index}`}
 										data={todo} filter={filter}
@@ -61,16 +71,27 @@ class Main extends Component {
 	}
 
 	onKeyPress (e) {
+		const { dispatch, todos, new_todo_value } = this.props;
 		if (e.key === 'Enter') {
-			this.props.dispatch({
-				type : 'SET_DATA',
-				todos : [].concat(this.props.todos || []).concat({
-					id : Date.now(),
-					message : this.props.new_todo_value,
-					status : 'ACTIVE',
-				}),
-				new_todo_value : '',
-			});
+			return dispatch({
+				type : 'GQL',
+				gql : `
+					mutation ($message:String!) {
+						add_todo (message:$message) {
+							id message status
+						}
+					}
+				`,
+				new_type : 'SET_DATA',
+				variables : { message : new_todo_value },
+				mapping : (data) => {
+					const new_todos = [].concat(todos).concat(data.add_todo);
+					return { todos : new_todos };
+				},
+			})
+			// .then(result => {
+			// 	return this._fetch();
+			// });
 		}
 	}
 
@@ -104,9 +125,14 @@ class Main extends Component {
 		return this.onChange('todos', todos);
 	}
 
-	componentWillMount () {
-		this.props.dispatch({
-			type : 'CLEAR_DATA',
+	_fetch () {
+		return this.props.dispatch({
+			type : 'GQL',
+			gql : `{ todos { id message status } }`,
+			new_type : 'SET_DATA',
+			mapping : (data) => {
+				return { todos : data.todos };
+			},
 		});
 	}
 
@@ -138,19 +164,8 @@ class TODOItem extends Component {
 
 export default connect(state => {
 	return {
-		todos : [
-			{
-				id : 1,
-				message : 'test todo message 1',
-				status : 'ACTIVE'
-			},
-			{
-				id : 2,
-				message : 'test todo message 2',
-				status : 'CMPL',
-			}
-		],
-		new_todo_value : '',
-		...state.data,
+		new_todo_value : state.data.new_todo_value || '',
+		todos : state.data.todos || [],
+		filter : state.data.filter,
 	};
 })(Main)

@@ -15,8 +15,6 @@ import types from '../actions.js';
 		variables: 參數，物件
 		mapping: 函數, 參數為 graphql server 回傳的資料 res.body.data, 回傳資料變成新的 action
 		cache: 是否使用 server-side memcached，預設值為 `false`
-		disable_error_notification: 是否禁用預設的錯誤提示訊息
-		progress_notification: 是否顯示進度提示
 		name: 查詢名稱，這是搭配 notification 使用的
 	回傳
 		Promise 物件
@@ -24,7 +22,7 @@ import types from '../actions.js';
 
 const graphqlLayer = store => next => action => {
 
-	if(action.type == types.GQL) {
+	if(action.type == 'GQL') {
 
 		action = Object.assign({
 			endpoint : '/graphql',
@@ -35,27 +33,16 @@ const graphqlLayer = store => next => action => {
 
 			const { endpoint, gql, cache, variables, files } = action;
 
-			if(action.progress_notification) {
-				store.dispatch({
-					type : types.NOTIFY,
-					title : action.name || `GQL`,
-					message : `資料讀取中`,
-					level : 'info',
-					position : 'tr',
-					auto_dismiss : 5,
-				});
-			}
-
-			superagent.post(decideEndpoint(endpoint, gql, cache))
-			.send(generatePayload(gql, variables, files))
+			superagent.post('/graphql')
+			.send({
+				query : gql,
+				variables : variables || { },
+			})
 			.set('Accept', 'application/json')
 			.end((err, res = {}) => {
 
 				const error = res.body && res.body.errors ? res.body.errors : err;
 				if(error) {
-					if(!action.disable_error_notification) {
-						show_error_notification(error, store, action);
-					}
 					return reject(error);
 				}
 
@@ -72,17 +59,6 @@ const graphqlLayer = store => next => action => {
 					} catch (err) {
 						return reject(err);
 					}
-				}
-
-				if(action.progress_notification) {
-					store.dispatch({
-						type : types.NOTIFY,
-						title : action.name || `GQL`,
-						message : `資料讀取成功`,
-						level : 'success',
-						position : 'tr',
-						auto_dismiss : 5,
-					});
 				}
 
 				const tmp = {
@@ -145,15 +121,4 @@ function generatePayload (gql, variables, files) {
 
 	return formData;
 
-}
-
-// dispatch action for error
-function show_error_notification (err, store, action) {
-	store.dispatch({
-		type : types.NOTIFY,
-		title : action.name || `GQL`,
-		err : err,
-		level : 'error',
-	});
-	return err;
 }
