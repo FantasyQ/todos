@@ -111,10 +111,23 @@ class Main extends Component {
 	}
 
 	onDelete (id) {
-
+		return this.props.dispatch({
+			type : 'GQL',
+			gql : `
+				mutation ($id:ID!) {
+					remove_todo (id:$id) { id }
+				}
+			`,
+			variables : { id },
+			new_type : 'NOP',
+		})
+		.then(result => {
+			return this._fetch();
+		});
 	}
 
 	onChangeTODO (id, name, value) {
+		// local update
 		const todos = [].concat(this.props.todos).map(todo => {
 			const new_todo = { ...todo };
 			if(todo.id + '' == id + '') {
@@ -122,7 +135,20 @@ class Main extends Component {
 			}
 			return new_todo;
 		});
-		return this.onChange('todos', todos);
+		this.onChange('todos', todos);
+		// remote update
+		const variables = { id };
+		variables[name] = value;
+		return this.props.dispatch({
+			type : 'GQL',
+			gql : `
+				mutation ($id:ID!,$message:String,$status:TODOStatus) {
+					update_todo (id:$id message:$message status:$status) { id }
+				}
+			`,
+			variables : variables,
+			new_type : 'NOP',
+		});
 	}
 
 	_fetch () {
@@ -151,12 +177,15 @@ class TODOItem extends Component {
 			<li className={classnames}>
 				<div>
 					<input type="checkbox" checked={data.status == 'CMPL'}
-						onChange={e => onChange(data.id, 'status', data.status == 'CMPL' ? 'ACTIVE' : 'CMPL')}
+						onChange={
+							e => onChange(data.id, 'status', data.status == 'CMPL' ? 'ACTIVE' : 'CMPL')
+						}
 					/>
 					<label>{data.message}</label>
 					<button onClick={onDelete}></button>
 				</div>
-				<input className="edit" value={data.message} />
+				<input className="edit" value={data.message}
+					onChange={e => onChange(data.id, 'message', e.target.value)} />
 			</li>
 		);
 	}
