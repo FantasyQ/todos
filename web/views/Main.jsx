@@ -54,13 +54,13 @@ class Main extends Component {
 							{todos ? todos.length : 0} items left
 						</span>
 						<ul className="Filters">
-							<li className={cx({active : !filter})} onClick={this.onChange.bind(this, 'filter', null)}>
+							<li className={cx({ active : !filter })} onClick={this.onChange.bind(this, 'filter', null)}>
 								All
 							</li>
-							<li className={cx({active : filter == 'ACTIVE'})} onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}>
+							<li className={cx({ active : filter == 'ACTIVE' })} onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}>
 								Active
 							</li>
-							<li className={cx({active : filter == 'CMPL'})} onClick={this.onChange.bind(this, 'filter', 'CMPL')}>
+							<li className={cx({ active : filter == 'CMPL' })} onClick={this.onChange.bind(this, 'filter', 'CMPL')}>
 								Completed
 							</li>
 						</ul>
@@ -88,10 +88,7 @@ class Main extends Component {
 					const new_todos = [].concat(todos).concat(data.add_todo);
 					return { todos : new_todos };
 				},
-			})
-			// .then(result => {
-			// 	return this._fetch();
-			// });
+			});
 		}
 	}
 
@@ -113,11 +110,7 @@ class Main extends Component {
 	onDelete (id) {
 		return this.props.dispatch({
 			type : 'GQL',
-			gql : `
-				mutation ($id:ID!) {
-					remove_todo (id:$id) { id }
-				}
-			`,
+			gql : `mutation ($id:ID!) { remove_todo (id:$id) { id } }`,
 			variables : { id },
 			new_type : 'NOP',
 		})
