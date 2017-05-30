@@ -54,13 +54,15 @@ class Main extends Component {
 							{todos ? todos.length : 0} items left
 						</span>
 						<ul className="Filters">
-							<li className={cx({ active : !filter })} onClick={this.onChange.bind(this, 'filter', null)}>
+							<li className={cx({ active : !filter, for_all : 1 })}
+								onClick={this.onChange.bind(this, 'filter', null)}
+							>
 								All
 							</li>
-							<li className={cx({ active : filter == 'ACTIVE' })} onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}>
+							<li className={cx({ active : filter == 'ACTIVE', for_active : 1 })} onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}>
 								Active
 							</li>
-							<li className={cx({ active : filter == 'CMPL' })} onClick={this.onChange.bind(this, 'filter', 'CMPL')}>
+							<li className={cx({ active : filter == 'CMPL', for_cmple : 1 })} onClick={this.onChange.bind(this, 'filter', 'CMPL')}>
 								Completed
 							</li>
 						</ul>

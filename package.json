@@ -6,7 +6,8 @@
     "start": "npm run api",
     "api": "supervisor --harmony -w ./api ./api/index.js",
     "web": "webpack --devtool cheap-module-inline-source-map --debug --output-pathinfo --progress --colors -w",
-    "eslint:web": "eslint --quiet -c ./web/.eslintrc --ext .jsx,.js ./web"
+    "eslint:web": "eslint --quiet -c ./web/.eslintrc --ext .jsx,.js ./web",
+	"test": "mocha --recursive --harmony -s 2000 -t 60000 tests"
   },
   "repository": {
     "type": "git",

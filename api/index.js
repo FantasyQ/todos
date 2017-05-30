@@ -12,7 +12,9 @@ const { graphql, GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLNonNull
 
 const app = express();
 app.set('trust proxy', true);
-app.use(morgan('combined'));
+if(!process.env.DISABLE_MORGAN) {
+	app.use(morgan('combined'));
+}
 app.use(cookieSession({
 	name : 'session',
 	keys : ['TEST0123456789'],
@@ -163,4 +165,5 @@ app.get('*', (req, res, next) => {
 
 //////////////////////////////////////////////////////////
 
-app.listen(4000, () => console.log('Now browse to localhost:4000/graphql'));
+const port = process.env.PORT || 4000;
+app.listen(port, () => console.log(`Now browse to localhost:${port}/graphql`));
