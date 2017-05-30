@@ -62,7 +62,7 @@ class Main extends Component {
 							<li className={cx({ active : filter == 'ACTIVE', for_active : 1 })} onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}>
 								Active
 							</li>
-							<li className={cx({ active : filter == 'CMPL', for_cmple : 1 })} onClick={this.onChange.bind(this, 'filter', 'CMPL')}>
+							<li className={cx({ active : filter == 'CMPL', for_cmpleted : 1 })} onClick={this.onChange.bind(this, 'filter', 'CMPL')}>
 								Completed
 							</li>
 						</ul>

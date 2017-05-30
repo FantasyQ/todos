@@ -20,9 +20,9 @@ describe('測試新增 todo', () => {
 		});
 	});
 
-	const msg1 = `測試 TODO ${Date.now()}`;
+	const msg1 = `測試 TODO ${parseInt(Date.now() / 1000000)}`;
 
-	it('新增 TODO', done => {
+	it('新增', done => {
 		const nightmare = Nightmare({
 			show : true,
 			webPreferences : { partition : `persist:${global._session_key}` },
@@ -44,7 +44,7 @@ describe('測試新增 todo', () => {
 		});
 	});
 
-	it('標記 TODO 為完成', done => {
+	it('標記為完成', done => {
 		const nightmare = Nightmare({
 			show : true,
 			webPreferences : { partition : `persist:${global._session_key}` },
@@ -61,7 +61,7 @@ describe('測試新增 todo', () => {
 		});
 	});
 
-	it('測試篩選器 active', done => {
+	it('篩選器 Active', done => {
 		const nightmare = Nightmare({
 			show : true,
 			webPreferences : { partition : `persist:${global._session_key}` },
@@ -71,7 +71,6 @@ describe('測試新增 todo', () => {
 		.wait(250)
 		.evaluate(() => {
 			return document.querySelector('ul.TODOList li.TODOItem') === null;
-			// expect(document.querySelector('ul.TODOList li.TODOItem')).equal(null);
 		})
 		.end()
 		.then(result => {
@@ -82,5 +81,69 @@ describe('測試新增 todo', () => {
 			return done(err);
 		});
 	});
+
+	it('篩選器 Completed', done => {
+		const nightmare = Nightmare({
+			show : true,
+			webPreferences : { partition : `persist:${global._session_key}` },
+		});
+		nightmare.goto(`http://localhost:${process.env.PORT}/`)
+		.click('ul.Filters li.for_cmpleted')
+		.wait(250)
+		.evaluate(() => {
+			return document.querySelector('ul.TODOList li.TODOItem') != null;
+		})
+		.end()
+		.then(result => {
+			expect(result).equal(true);
+			return done();
+		})
+		.catch(err => {
+			return done(err);
+		});
+	});
+
+	it('修改訊息', done => {
+		const nightmare = Nightmare({
+			show : true,
+			webPreferences : { partition : `persist:${global._session_key}` },
+		});
+		nightmare.goto(`http://localhost:${process.env.PORT}/`)
+		.type('ul.TODOList li.TODOItem input.edit', ' 測試更新')
+		.wait(100)
+		.evaluate(() => {
+			return document.querySelector('ul.TODOList li.TODOItem label').innerText;
+		})
+		.end()
+		.then(result => {
+			expect(result).equal(msg1 + ' 測試更新');
+			return done();
+		})
+		.catch(err => {
+			return done(err);
+		});
+	});
+
+	it('測試刪除', done => {
+		const nightmare = Nightmare({
+			show : true,
+			webPreferences : { partition : `persist:${global._session_key}` },
+		});
+		nightmare.goto(`http://localhost:${process.env.PORT}/`)
+		.click('ul.TODOList li.TODOItem button')
+		.wait(250)
+		.evaluate(() => {
+			return document.querySelector('ul.TODOList li.TODOItem') === null;
+		})
+		.end()
+		.then(result => {
+			expect(result).equal(true);
+			return done();
+		})
+		.catch(err => {
+			return done(err);
+		});
+	});
+
 
 });
