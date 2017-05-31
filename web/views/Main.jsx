@@ -41,7 +41,7 @@ class Main extends Component {
 									<TODOItem key={`${todo.id}-${index}`}
 										data={todo} filter={filter} edit={todo.id == edit}
 										onKeyPress={this.onKeyPressTODO.bind(this)}
-										onDoubleClick={this.onDoubleClick.bind(this, todo.id)}
+										onClick={this.onClickTODO.bind(this, todo.id)}
 										onChange={this.onChangeTODO.bind(this)}
 										onDelete={this.onDelete.bind(this, todo.id)}
 									/>
@@ -79,7 +79,9 @@ class Main extends Component {
 	}
 
 	onKeyPressTODO (e) {
-		this.onChange('edit', null);
+		if (e.key === 'Enter') {
+			this.onChange('edit', null);
+		}
 	}
 
 	onKeyPress (e) {
@@ -119,7 +121,7 @@ class Main extends Component {
 		return this.onChange('todos', todos);
 	}
 
-	onDoubleClick (id) {
+	onClickTODO (id) {
 		this.onChange('edit', id);
 	}
 
@@ -191,7 +193,7 @@ class TODOItem extends Component {
 							e => onChange(data.id, 'status', data.status == 'CMPL' ? 'ACTIVE' : 'CMPL')
 						}
 					/>
-					<label onDoubleClick={this.props.onDoubleClick}>
+					<label onClick={this.props.onClick}>
 						{data.message}
 					</label>
 					<button onClick={onDelete}></button>

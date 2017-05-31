@@ -109,6 +109,8 @@ describe('測試新增 todo', () => {
 			webPreferences : { partition : `persist:${global._session_key}` },
 		});
 		nightmare.goto(`http://localhost:${process.env.PORT}/`)
+		.click('ul.TODOList li.TODOItem label')
+		.wait('ul.TODOList li.TODOItem input.edit')
 		.type('ul.TODOList li.TODOItem input.edit', ' 測試更新')
 		.wait(100)
 		.evaluate(() => {
