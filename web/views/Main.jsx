@@ -19,7 +19,7 @@ class Main extends Component {
 	}
 
 	render () {
-		const { todos, filter, new_todo_value } = this.props;
+		const { todos, filter, new_todo_value, edit } = this.props;
 		const allChecked = todos && todos.every(t => t.status == 'CMPL');
 		return (
 			<div className='Main'>
@@ -39,7 +39,9 @@ class Main extends Component {
 							{todos.map((todo,index) => {
 								return (
 									<TODOItem key={`${todo.id}-${index}`}
-										data={todo} filter={filter}
+										data={todo} filter={filter} edit={todo.id == edit}
+										onKeyPress={this.onKeyPressTODO.bind(this)}
+										onDoubleClick={this.onDoubleClick.bind(this, todo.id)}
 										onChange={this.onChangeTODO.bind(this)}
 										onDelete={this.onDelete.bind(this, todo.id)}
 									/>
@@ -59,10 +61,14 @@ class Main extends Component {
 							>
 								All
 							</li>
-							<li className={cx({ active : filter == 'ACTIVE', for_active : 1 })} onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}>
+							<li className={cx({ active : filter == 'ACTIVE', for_active : 1 })}
+								onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}
+							>
 								Active
 							</li>
-							<li className={cx({ active : filter == 'CMPL', for_cmpleted : 1 })} onClick={this.onChange.bind(this, 'filter', 'CMPL')}>
+							<li className={cx({ active : filter == 'CMPL', for_cmpleted : 1 })}
+								onClick={this.onChange.bind(this, 'filter', 'CMPL')}
+							>
 								Completed
 							</li>
 						</ul>
@@ -70,6 +76,10 @@ class Main extends Component {
 				</If>
 			</div>
 		);
+	}
+
+	onKeyPressTODO (e) {
+		this.onChange('edit', null);
 	}
 
 	onKeyPress (e) {
@@ -94,7 +104,7 @@ class Main extends Component {
 		}
 	}
 
-	onChange (name, value, e) {
+	onChange (name, value) {
 		const action = { type : 'SET_DATA' };
 		action[name] = value;
 		this.props.dispatch(action);
@@ -107,6 +117,10 @@ class Main extends Component {
 			return new_todo;
 		});
 		return this.onChange('todos', todos);
+	}
+
+	onDoubleClick (id) {
+		this.onChange('edit', id);
 	}
 
 	onDelete (id) {
@@ -161,12 +175,13 @@ class Main extends Component {
 
 class TODOItem extends Component {
 	render () {
-		const { data, filter, onDelete, onChange } = this.props;
+		const { data, filter, onDelete, onChange, edit } = this.props;
 		if(filter && filter != data.status) return null;
 		const classnames = cx({
 			TODOItem : true,
 			active : data.status == 'ACTIVE',
 			complete : data.status == 'CMPL',
+			edit : edit,
 		});
 		return (
 			<li className={classnames}>
@@ -176,10 +191,12 @@ class TODOItem extends Component {
 							e => onChange(data.id, 'status', data.status == 'CMPL' ? 'ACTIVE' : 'CMPL')
 						}
 					/>
-					<label>{data.message}</label>
+					<label onDoubleClick={this.props.onDoubleClick}>
+						{data.message}
+					</label>
 					<button onClick={onDelete}></button>
 				</div>
-				<input className="edit" value={data.message}
+				<input className="edit" value={data.message} onKeyPress={this.props.onKeyPress}
 					onChange={e => onChange(data.id, 'message', e.target.value)} />
 			</li>
 		);
@@ -190,6 +207,7 @@ export default connect(state => {
 	return {
 		new_todo_value : state.data.new_todo_value || '',
 		todos : state.data.todos || [],
+		edit : state.data.edit || null,
 		filter : state.data.filter,
 	};
-})(Main)
+})(Main);
