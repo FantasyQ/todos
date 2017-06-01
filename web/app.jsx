@@ -3,7 +3,7 @@
 import 'babel-polyfill';
 import 'script-loader!jquery';
 import './styles/app.less';
-import './styles/app.sass';
+import './styles/app.scss';
 
 import React from 'react';
 import store from './store.js';

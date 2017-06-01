@@ -62,6 +62,10 @@ module.exports = {
 				test : /\.css$/,
 				loader : 'style-loader!css-loader!postcss-loader',
 			},
+            {
+                test: /\.scss$/,
+                loader: 'style!css!sass'
+            },
 		],
 		noParse : /node_modules\/quill\/dist/
 	},

@@ -24,56 +24,60 @@ class Main extends Component {
 		return (
 			<div className='Main'>
 				<h1>todos</h1>
-				<div className='Form'>
-					<input className="NewTODO" placeholder="What needs to be done?"
-						value={new_todo_value}
-						onKeyPress={this.onKeyPress.bind(this)}
-						onChange={e => this.onChange('new_todo_value', e.target.value, e)}
-					/>
+				<div className="Content">
+					<div className='Form'>
+						<input className="NewTODO" placeholder="What needs to be done?"
+							value={new_todo_value}
+							onKeyPress={this.onKeyPress.bind(this)}
+							onChange={e => this.onChange('new_todo_value', e.target.value, e)}
+						/>
+					</div>
+					<If test={todos instanceof Array && todos.length > 0}>
+						<div className='TODOs'>
+							<input className="ToggleAll" type="checkbox" checked={allChecked}
+								onChange={this.toggleAll.bind(this, allChecked ? 'ACTIVE' : 'CMPL')} />
+							<ul className="TODOList" >
+								{todos.map((todo,index) => {
+									return (
+										<TODOItem key={`${todo.id}-${index}`}
+											data={todo} filter={filter} edit={todo.id == edit}
+											onKeyPress={this.onKeyPressTODO.bind(this)}
+											onClick={this.onClickTODO.bind(this, todo.id)}
+											onChange={this.onChangeTODO.bind(this)}
+											onDelete={this.onDelete.bind(this, todo.id)}
+										/>
+									);
+								})}
+							</ul>
+						</div>
+					</If>
+					<If test={todos instanceof Array && todos.length > 0}>
+						<div className='Footer'>
+							<span className='TODOCount'>
+								{todos ? todos.length : 0} items left
+							</span>
+							<ul className="Filters">
+								<li className={cx({ active : !filter, for_all : 1 })}
+									onClick={this.onChange.bind(this, 'filter', null)}
+								>
+									All
+								</li>
+								<li className={cx({ active : filter == 'ACTIVE', for_active : 1 })}
+									onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}
+								>
+									Active
+								</li>
+								<li className={cx({ active : filter == 'CMPL', for_cmpleted : 1 })}
+									onClick={this.onChange.bind(this, 'filter', 'CMPL')}
+								>
+									Completed
+								</li>
+							</ul>
+							<span className="clearAll">Clear completed</span>
+						</div>
+					</If>
+					<div className="decoBackground"></div>
 				</div>
-				<If test={todos instanceof Array && todos.length > 0}>
-					<div className='TODOs'>
-						<input className="ToggleAll" type="checkbox" checked={allChecked}
-							onChange={this.toggleAll.bind(this, allChecked ? 'ACTIVE' : 'CMPL')} />
-						<ul className="TODOList" >
-							{todos.map((todo,index) => {
-								return (
-									<TODOItem key={`${todo.id}-${index}`}
-										data={todo} filter={filter} edit={todo.id == edit}
-										onKeyPress={this.onKeyPressTODO.bind(this)}
-										onClick={this.onClickTODO.bind(this, todo.id)}
-										onChange={this.onChangeTODO.bind(this)}
-										onDelete={this.onDelete.bind(this, todo.id)}
-									/>
-								);
-							})}
-						</ul>
-					</div>
-				</If>
-				<If test={todos instanceof Array && todos.length > 0}>
-					<div className='Footer'>
-						<span className='TODOCount'>
-							{todos ? todos.length : 0} items left
-						</span>
-						<ul className="Filters">
-							<li className={cx({ active : !filter, for_all : 1 })}
-								onClick={this.onChange.bind(this, 'filter', null)}
-							>
-								All
-							</li>
-							<li className={cx({ active : filter == 'ACTIVE', for_active : 1 })}
-								onClick={this.onChange.bind(this, 'filter', 'ACTIVE')}
-							>
-								Active
-							</li>
-							<li className={cx({ active : filter == 'CMPL', for_cmpleted : 1 })}
-								onClick={this.onChange.bind(this, 'filter', 'CMPL')}
-							>
-								Completed
-							</li>
-						</ul>
-					</div>
-				</If>
 			</div>
 		);
 	}

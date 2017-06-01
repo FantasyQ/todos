@@ -7,7 +7,7 @@
     "api": "supervisor --harmony -w ./api ./api/index.js",
     "web": "webpack --devtool cheap-module-inline-source-map --debug --output-pathinfo --progress --colors -w",
     "eslint:web": "eslint --quiet -c ./web/.eslintrc --ext .jsx,.js ./web",
-	"test": "mocha --recursive --harmony -s 2000 -t 60000 tests"
+    "test": "mocha --recursive --harmony -s 2000 -t 60000 tests"
   },
   "repository": {
     "type": "git",
@@ -58,7 +58,7 @@
     "babel-preset-react": "~6.24.1",
     "babel-preset-stage-0": "~6.24.1",
     "chai": "~3.5.0",
-    "css-loader": "~0.28.2",
+    "css-loader": "^0.28.4",
     "eslint": "~3.19.0",
     "file-loader": "~0.11.1",
     "less": "~2.7.2",
